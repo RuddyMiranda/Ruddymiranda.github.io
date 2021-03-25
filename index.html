@@ -1,0 +1,22 @@
+<?php
+require_once("config/basededatos.php");
+if (!isset($_GET["c"])) {
+    $controlador = 'cliente';
+} else {
+    $controlador = strtolower($_GET["c"]);
+}
+$link = "controlador/{$controlador}_controlador.php";
+if (file_exists($link)) {
+    require_once("$link");
+    $claseControlador = ucwords($controlador) . "Controlador";
+    $objControlador = new $claseControlador;
+    if (!isset($_GET["c"])) {
+        $objControlador->index();
+    } else {
+        $accion = isset($_GET["c"]) ? $_GET["a"] : "index";
+        call_user_func(array($objControlador, $accion));
+    }
+} else {
+    echo "Error 404: El archivo que intenta incluir no existe.";
+}
+?>
